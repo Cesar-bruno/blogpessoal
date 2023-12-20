@@ -29,20 +29,22 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "*" ,allowedHeaders = "*" )
 
 public class TemaController {
+	
 	@Autowired
 	private TemaRepository temaRepository ;
+	
 	@GetMapping
 	public ResponseEntity<List<Tema>> getAll(){
 		return ResponseEntity.ok(temaRepository.findAll()); // select * from tb_postagem;
 		
 		}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity <Tema> getById(@PathVariable Long id){
-		return temaRepository.findById(id)
-				.map(resposta -> ResponseEntity.ok(resposta))
-				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-	}
+		@GetMapping("/{id}")
+		public ResponseEntity <Tema> getById(@PathVariable Long id){
+			return temaRepository.findById(id)
+					.map(resposta -> ResponseEntity.ok(resposta))
+					.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+		}
 	
 	@GetMapping("/descricao/{descricao}")
 	public ResponseEntity <List<Tema>> getByTitulo(@PathVariable String descricao){
