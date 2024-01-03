@@ -2,6 +2,8 @@ package com.generation.blogpessoal.security;
 
 import java.io.IOException;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,14 +26,17 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 	
-	 @Autowired
+	  @Autowired
 	    private JwtService jwtService;
 
 	    @Autowired
 	    private UserDetailsServiceImpl userDetailsService;
 
 	    @Override
-	    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+	    protected void doFilterInternal(HttpServletRequest request, 
+	    		HttpServletResponse response, FilterChain filterChain) 
+	    				throws ServletException, IOException {
+	    	
 	        String authHeader = request.getHeader("Authorization");
 	        String token = null;
 	        String username = null;
@@ -46,12 +51,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 	                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 	                    
 	                if (jwtService.validateToken(token, userDetails)) {
-	                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+	                    UsernamePasswordAuthenticationToken authToken = 
+	                    		new UsernamePasswordAuthenticationToken(userDetails, null, 
+	                    				userDetails.getAuthorities());
+	                    
 	                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 	                    SecurityContextHolder.getContext().setAuthentication(authToken);
 	                }
 	            
 	            }
+	            
 	            filterChain.doFilter(request, response);
 
 	        }catch(ExpiredJwtException | UnsupportedJwtException | MalformedJwtException 

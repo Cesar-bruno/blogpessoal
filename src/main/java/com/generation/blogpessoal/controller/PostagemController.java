@@ -25,35 +25,34 @@ import com.generation.blogpessoal.repository.TemaRepository;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/postagem")
-@CrossOrigin(origins = "*" ,allowedHeaders = "*" )
+@RequestMapping("/postagens")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 
 public class PostagemController {
 	
 	@Autowired
-	private PostagemRepository postagemRepository ;
+	private PostagemRepository postagemRepository;
 	
 	@Autowired
 	private TemaRepository temaRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<Postagem>> getAll(){
-		return ResponseEntity.ok(postagemRepository.findAll()); // select * from tb_postagem;
-		}
-	
-	//select * from tb_postagem where id = ?
+		return ResponseEntity.ok(postagemRepository.findAll());
+	}
+
 	@GetMapping("/{id}")
-	public ResponseEntity <Postagem> getById(@PathVariable Long id){
+	public ResponseEntity<Postagem> getById(@PathVariable Long id){
 		return postagemRepository.findById(id)
-				.map(resposta -> ResponseEntity.ok(resposta))
+				.map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 	
 	@GetMapping("/titulo/{titulo}")
-	public ResponseEntity <List<Postagem>> getByTitulo(@PathVariable String titulo){
+	public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo){
 		return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo));
-		}
-	
+	}
+
 	@PostMapping
 	public ResponseEntity<Postagem> post(@Valid @RequestBody Postagem postagem){
 		if (temaRepository.existsById(postagem.getTema().getId()))
@@ -79,16 +78,15 @@ public class PostagemController {
 		
 	}
 	
-	@DeleteMapping ("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete( @PathVariable long id) {
-		
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable Long id) {
 		Optional<Postagem> postagem = postagemRepository.findById(id);
-
-		if (postagem.isEmpty())
+		
+		if(postagem.isEmpty())
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		
-		postagemRepository.deleteById(id);
+		postagemRepository.deleteById(id);				
 	}
 
 }
